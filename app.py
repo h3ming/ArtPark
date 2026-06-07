@@ -14,6 +14,15 @@ DATA = DATA_DIR / "CPD_ParkArt.csv"
 ART_DATA = pd.read_csv(DATA)
 
 # --------------------------------
+# SLIDER MAX PER GROUPBY
+# --------------------------------
+GROUPBY_MAX = {
+    "PARK":   ART_DATA["PARK"].nunique(),
+    "OWNER":  ART_DATA["OWNER"].nunique(),
+    "ARTIST": ART_DATA["ARTIST"].nunique(),
+}
+
+# --------------------------------
 # HELPERS
 # --------------------------------
 def make_dropdown_options(column, df=ART_DATA):
@@ -55,7 +64,7 @@ def make_art_map(df=ART_DATA):
 
     fig.update_layout(
         map_center={"lat": 41.8781, "lon": -87.6298},
-        margin={"r": 0, "t": 0, "l": 5, "b": 0},
+        margin={"r": 0, "t": 0, "l": 0, "b": 0},
         legend_title_text="Owner"
     )
 
@@ -97,6 +106,18 @@ def make_bar_chart(df=ART_DATA, groupby="PARK", top_n=20):
 # --------------------------------
 # NAME ANALYSIS
 # --------------------------------
+
+def make_slider_marks(max_val, groupby="PARK"):
+    if groupby == "ARTIST":
+        step = 50
+    elif groupby == "OWNER":
+        step = 5
+    else:  # PARK
+        step = 10
+    marks = {i: str(i) for i in range(step, max_val + 1, step)}
+    marks[max_val] = str(max_val)
+    return marks
+
 
 STOPWORDS = {
     "a", "an", "the", "and", "or", "of", "in", "at", "to", "for",
@@ -172,6 +193,8 @@ def make_ownership_treemap(df=ART_DATA):
 
 app = Dash(__name__, suppress_callback_exceptions=True)
 
+server = app.server
+
 app.layout = html.Div(
     className="app-shell",
     children=[
@@ -180,7 +203,7 @@ app.layout = html.Div(
             className="app-header",
             children=[
                 html.H1("Chicago Public Art Explorer"),
-                html.P("Interactive visualizations using the names, location data, and owernship data of public artworks in Chicago parks.")
+                html.P("Interactive visualizations using the names, location data, and ownership data of public artworks in Chicago parks.")
             ]
         ),
 
@@ -207,9 +230,9 @@ app.layout = html.Div(
                                 dcc.Tab(label="Artwork Count", value="tab2",
                                         children=dcc.Graph(id="bar-chart",
                                                            figure=make_bar_chart())),
-                                dcc.Tab(label="Artwork Name Analysis", value="tab3",
+                                dcc.Tab(label="Artwork Title Frequency Analysis", value="tab3",
                                         children=dcc.Graph(id="name-freq-chart",
-                                                           figure=make_word_freq_chart())),
+                                                           figure=make_word_freq_chart(top_n=20))),
                                 dcc.Tab(label="Ownership Treemap", value="tab4",
                                         children=dcc.Graph(id="treemap",
                                                            figure=make_ownership_treemap())),
@@ -243,8 +266,9 @@ def update_sidebar(active_tab):
             dcc.Dropdown(id="map-park-filter", options=make_dropdown_options("PARK"),
                          multi=True, placeholder="Filter by park"),
             html.Hr(style={"borderColor": "#ccc", "margin": "16px 0"}),
-            html.P(
-                "A plot of every public artwork in the Chicago parks, colored by owner. Filter by artist, owner, or park to explore the collection geographically.",
+            html.H4(
+                "A plot of every public artwork in the Chicago parks, colored by owner. Filter by artist, owner, or park to explore the collection geographically. "
+                "We can see that public art is spread in parks across Chicago, especially concentrated in Lincoln Park and Grant Park.",
                 style={"lineHeight": "1.5"}),
         ]
 
@@ -269,10 +293,10 @@ def update_sidebar(active_tab):
                 max=50,
                 step=5,
                 value=20,
-                marks={i: str(i) for i in range(5, 51, 5)},
+                marks=make_slider_marks(50, "PARK"),
             ),
             html.Hr(style={"borderColor": "#ccc", "margin": "16px 0"}),
-            html.P(
+            html.H4(
                 "Depicts the count of artworks grouped by park, owner, or artist. Adjust the grouping in the dropdown and top N with the slider to compare how the collections are distributed.",
                 style={"lineHeight": "1.5"}),
         ]
@@ -285,24 +309,35 @@ def update_sidebar(active_tab):
                 min=10,
                 max=50,
                 step=5,
-                value=30,
+                value=20,
                 marks={i: str(i) for i in range(10, 51, 5)},
             ),
             html.Hr(style={"borderColor": "#ccc", "margin": "16px 0"}),
-            html.P(
+            html.H4(
                 "The frequency of words appearing in artwork titles. Dominant themes across the collection include: commemorative, community, and figurative.",
                 style={"lineHeight": "1.5"}),
         ]
 
     if active_tab == "tab4":
         return [
-            html.P(
+            html.H4(
                 "A hierarchical breakdown of ownership, organized by owner, park, and individual artwork. "
                 "Highlights how much of the collection CPD controls versus museums, institutions, and private owners.",
                 style={"lineHeight": "1.5"}),
         ]
 
     return []
+
+
+@app.callback(
+    Output("bar-topn", "max"),
+    Output("bar-topn", "marks"),
+    Output("bar-topn", "value"),
+    Input("bar-groupby", "value")
+)
+def update_slider_range(groupby):
+    max_val = GROUPBY_MAX.get(groupby, 50)
+    return max_val, make_slider_marks(max_val, groupby), 20
 
 
 @app.callback(
@@ -333,8 +368,8 @@ def update_bar(groupby, top_n):
     Input("name-topn", "value")
 )
 def update_name_freq(top_n):
-    return make_word_freq_chart(ART_DATA, top_n=top_n or 30)
+    return make_word_freq_chart(ART_DATA, top_n=top_n or 20)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

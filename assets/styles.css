@@ -1,47 +1,141 @@
+/* --------------------------------
+   FONTS
+-------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;600&display=swap');
+
+/* --------------------------------
+   VARIABLES
+-------------------------------- */
+:root {
+    --green-dark:   #1a3a1a;
+    --green-mid:    #3d5a2e;
+    --green-light:  #eaf0e2;
+    --gold:         #c8a800;
+    --cream:        #f5f0e8;
+    --parchment:    #eae4d8;
+    --bark:         #c8b89a;
+    --bark-dark:    #7a6a4a;
+    --text-dark:    #2a2a1a;
+    --text-mid:     #5a4a2a;
+}
+
+/* --------------------------------
+   GENERAL
+-------------------------------- */
+body {
+    font-size: 14px;
+}
+
+/* --------------------------------
+   SHELL
+-------------------------------- */
 .app-shell {
     height: 100vh;
     width: 100vw;
     overflow: hidden;
-    font-family: Arial, sans-serif;
+    font-family: 'Source Sans 3', Arial, sans-serif;
+    color: var(--text-dark);
+    background: var(--parchment);
 }
 
+/* --------------------------------
+   HEADER
+-------------------------------- */
+.app-header {
+    background: var(--green-dark);
+    padding: 24px 24px;
+    border-bottom: 3px solid var(--gold);
+}
+
+.app-header h1 {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--cream);
+    margin: 0 0 2px;
+    letter-spacing: 0.01em;
+}
+
+.app-header p {
+    font-size: 13px;
+    color: #8ab87a;
+    margin: 0;
+}
+
+/* --------------------------------
+   BODY
+-------------------------------- */
 .body {
     display: flex;
-    height: 100vh;
+    height: calc(100vh - 68px);
 }
 
+/* --------------------------------
+   SIDEBAR
+-------------------------------- */
 .sidebar {
-    width: 320px;
+    width: 280px;
     padding: 16px;
-    background: #f7f7f9;
-    border-right: 1px solid #e0e0e0;
-
+    background: var(--cream);
+    border-right: 1px solid var(--bark);
     display: flex;
     flex-direction: column;
-    gap: 12px;
-
+    gap: 10px;
     overflow-y: auto;
 }
 
+.sidebar h2 {
+    font-family: 'Source Sans 3', Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--green-dark);
+    margin: 6px 0 2px;
+}
+
+.sidebar p {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* --------------------------------
+   MAIN CONTENT
+-------------------------------- */
 .main-content {
     flex: 1;
-    height: 100vh;
-    padding: 0;
-    margin: 0;
+    height: 100%;
     overflow: hidden;
 }
 
-.sidebar h1,
-.sidebar h2,
-.sidebar h3 {
-    font-size: 14px;
-    margin: 8px 0;
-    font-weight: 600;
-    color: #333;
+/* --------------------------------
+   TABS
+-------------------------------- */
+.tabs {
+    border-bottom: 1px solid var(--bark) !important;
+    background: var(--parchment) !important;
 }
 
-hr.dotted {
-  border: none;
-  border-top: 2px dotted #ff5733;
-  width: 80%;
+.tab {
+    background: var(--parchment) !important;
+    color: var(--bark-dark) !important;
+    border-bottom: 3px solid transparent !important;
+    font-family: 'Source Sans 3', Arial, sans-serif !important;
+    font-size: 14px !important;
+}
+
+.tab:hover {
+    background: var(--green-light) !important;
+    color: var(--green-dark) !important;
+}
+
+.tab--selected {
+    background: var(--green-dark) !important;
+    color: var(--cream) !important;
+    font-weight: 600 !important;
+    border-bottom: 3px solid var(--gold) !important;
+    font-family: 'Source Sans 3', Arial, sans-serif !important;
+    font-size: 14px !important;
 }

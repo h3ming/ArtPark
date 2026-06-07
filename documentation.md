@@ -1,14 +1,20 @@
 # Picking my dataset
-I chose this dataset from the Chicago Data Portal because I like art wanted to learn more about public art in Chicago. I was hoping to find a more detailed dataset that had more information about public art installations around the city, but this was the closest I could get to that from the database. 
+I chose this dataset from the Chicago Data Portal because I like art wanted to learn more about public art in Chicago. I was hoping to find a more detailed dataset that had information about public art installations around the city, but this was the closest I could get to that from the database. 
 I went with this dataset in particular because it was the most recently updated with the most views out of several with similar names. 
 # Examining the dataset
 This dataset looks at public artworks in parks in the Chicagoland area. Its columns are: "the_geom","OBJECTID","PARK","PARK_NO","NAME","X_COORD","Y_COORD","ARTIST","OWNER","GISOBJID","OFFICIAL_N". 
-Unfortunately, there is no data for any sort of time, nor type of artwork. This limited my visualizations to relational (in terms of the artwork ownership/creator) and spatial. 
-With these limiations, I decided focus my data research question around w
-Some columns are somewhat redunant for my visualization, such as the_geom X_COORD/Y_COORD, and NAME and OFFICIAL_N; I decided to just use X_COORD and Y_COORD, and ignored OFFICIAL_N as it wasn't as complete as NAME. 
-I had to clean up some of the artist names; Frederick Cleveland Hibbarb was sometimes recorded as Frederick C. Hibbarb, and works with unknown artists were recorded as both Unknown and Unknown Artist. 
-With these
-# Methodology
-After examining the dataset, I decided to focus my research question around: Where is Chicago's public art located, and how concentrated is it within the park system?
-# Claude
-Claude was used to help for some callback implementation, formatting, and to fix the labels for the treemap.
+Unfortunately, there is no data for any sort of time, nor type of artwork. With these limitations, I decided focus my visualizations around relational and spatial content, with a little bit of textual analysis. I was guided by the questions: who owns the art, where is it concentrated, and what is the art about?
+# Methodology and interaction
+Some columns in the dataset were somewhat redunant for my visualization, such as the_geom X_COORD/Y_COORD, and NAME and OFFICIAL_N; I decided to just use X_COORD and Y_COORD, and ignored OFFICIAL_N as it wasn't as complete as NAME. I had to clean up some of the artist names; Frederick Cleveland Hibbarb was sometimes recorded as Frederick C. Hibbarb, and works with unknown artists were recorded as both Unknown and Unknown Artist. 
+To address spatial relationships, I made a filterable map of all the locations of public art in the parks in Chicago. I added a count next each name in the dropdown filters to provide the user with better context. 
+The Artwork Count bar chart gives more background about artwork concentration and ownership. I added another filter so the user could view and compare the artwork count through different groupings, and I added a slider to give the user the ability to decide the range of focus and more possible context. 
+The Artwork Title Frequency Analysis looks at the titles of all the artworks in the database and counts how often each individual word appears after filtering out common filler words. My implementation allowed for titles to be double-counnted; a piece containing the words "memorial fountain" would count for both "memorial" and "fountain". Without any further information about the art pieces other than the names, this visualization sheds some light on general themes of the pieces in this database. I added a slider to allow for the adjustment of the top N range.
+Finally, the Ownership Treemap gives a better visualization of the ownership of the art pieces. 
+Claude was used to help with iterating different graph ideas, some implementation, and styling. 
+# Key Findings 
+From the Interactive Map, we can see there is an uneven distribution of art pieces throughout the parks, with many art pieces along the parks close to the lakefront and heavily concentrated in Lincoln Park and Grant Park, but sparse everywhere else, especially in the West and South sides of the city. 
+The Artwork Count bar chart similarly revealed the high concentration of works in Lincoln Park and Grant Park, as well as the fact of CPD possessing the overwhelming majority of art pieces. Most artists only have one work on display, with Frederick C. Hibbard as the most prolific artist for Chicago public art at 7 pieces. 
+The Artwork Title Frequency Analysis chart showed "memorial", "monument", "lincoln", and "bust" as some of the most frequent title words, suggesting the collection has a skew towards honoring historical figures. "Fountain", "playground", and "mural" were also quite frequent, showing a strong theme of community.
+Finally, the Ownership Treemap further confirmed CPD's roughly 70% ownership of all public artworks in parks accross Chicago, with the Art Institute in Chicago as the largest private owner. 
+# What's Next?
+I felt this project was a bit limited by the fields of the dataset. It would be great to have access to time and types of art, and I could make more visualizations that focused on the historical growth of art in public spaces around Chicago, as well as what types of artistic mediums are popular/try to relate that with locations. With the current dataset, I would do more textual analysis, and see if there are certain "titles" owners prefer in their collection or parks seem to contain.  
