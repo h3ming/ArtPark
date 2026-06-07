@@ -147,6 +147,32 @@ def make_artist_dispersion_chart(df=ART_DATA, min_works=2):
 
 
 # --------------------------------
+# TREEMAP
+# --------------------------------
+
+def make_ownership_treemap(df=ART_DATA):
+    df = df.dropna(subset=["OWNER"]).copy()
+    df = df[df["OWNER"].str.strip() != ""]
+
+    fig = px.treemap(
+        df,
+        path=["OWNER", "PARK", "NAME"],
+        title="Artwork Ownership: Owner → Park → Artwork",
+        custom_data=["OWNER", "PARK"]
+    )
+
+    fig.update_traces(
+        hovertemplate="<b>%{label}</b><br>Owner: %{customdata[0]}<br>Park: %{customdata[1]}<extra></extra>"
+    )
+
+    fig.update_layout(
+        margin=dict(l=10, r=10, t=50, b=10)
+    )
+
+    return fig
+
+
+# --------------------------------
 # APP
 # --------------------------------
 
@@ -190,6 +216,9 @@ app.layout = html.Div(
                                 dcc.Tab(label="Artists and Spatial Spread", value="tab3",
                                         children=dcc.Graph(id="spatial-graph",
                                                            figure=make_artist_dispersion_chart())),
+                                dcc.Tab(label="Ownership Treemap", value="tab4",
+                                        children=dcc.Graph(id="treemap",
+                                                           figure=make_ownership_treemap())),
                             ]
                         ),
                     ],
@@ -251,10 +280,10 @@ def update_sidebar(active_tab):
             dcc.Slider(
                 id="spatial-min-works",
                 min=2,
-                max=7,
+                max=10,
                 step=1,
                 value=2,
-                marks={i: str(i) for i in range(2, 8)},
+                marks={i: str(i) for i in range(2, 11)},
             ),
         ]
 
