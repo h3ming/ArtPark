@@ -39,3 +39,9 @@
     font-weight: 600;
     color: #333;
 }
+
+hr.dotted {
+  border: none;
+  border-top: 2px dotted #ff5733;
+  width: 80%;
+}
